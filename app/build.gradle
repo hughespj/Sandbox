@@ -27,8 +27,16 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    //JODA time library
+    //JODA time
     compile 'joda-time:joda-time:2.9.9'
+
+    //Nav Drawer
+    compile('com.mikepenz:materialdrawer:5.6.0@aar') {
+        transitive = true
+    }
+
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     testCompile 'junit:junit:4.12'
 }
