@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Sandbox</string>
     <string name="toolbar_title">Hello there</string>
+    <string-array name="profile_values">
+        <item>Trent</item>
+        <item>Parker</item>
+    </string-array>
 </resources>
