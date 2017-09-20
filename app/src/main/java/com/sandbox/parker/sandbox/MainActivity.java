@@ -21,13 +21,16 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         DateTime time = new DateTime(DateTime.now());
         TextView timeView = ((TextView) findViewById(R.id.time_view));
         timeView.setText(time.toString());
+
+        HTTPRequest request = new HTTPRequest("https://google.com");
+        Map<String, String> params = new HashMap<>();
+        params.put("group", "768456467");
+        params.put("members", "5");
+        request.post("groups", params);
 
 
 
