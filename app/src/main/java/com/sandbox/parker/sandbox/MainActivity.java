@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private SharedPreferences navPrefs;
     private IProfile savedProfile;
+    private SearchView mSearchView;
+    private TextView mTextView;
 
 
 
@@ -51,15 +55,32 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setTitle("Test title");
         setSupportActionBar(mToolbar);
 
-        DateTime time = new DateTime(DateTime.now());
-        TextView timeView = ((TextView) findViewById(R.id.time_view));
-        timeView.setText(time.toString());
 
-        HTTPRequest request = new HTTPRequest("https://google.com");
-        Map<String, String> params = new HashMap<>();
-        params.put("group", "768456467");
-        params.put("members", "5");
-        request.post("groups", params);
+
+        new AsyncTask<String, Void, String>() {
+
+            @Override
+            protected String doInBackground(String... strings) {
+
+                HTTPRequest request = new HTTPRequest("https://itunes.com/search");
+                Map<String, String> params = new HashMap<>();
+                params.put("term", "beatles");
+                params.put("country", "US");
+                request.post("groups", params);
+                return
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+
+
+            }
+
+
+        }.execute();
+
+
 
 
 
