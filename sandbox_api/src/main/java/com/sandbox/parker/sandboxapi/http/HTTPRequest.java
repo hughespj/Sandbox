@@ -72,13 +72,15 @@ public class HTTPRequest {
         }
     }
 
-    public void post(String endpoint, Map<String, String> parameters) {
+    public String post(String endpoint, Map<String, String> parameters) {
+
+        String result = "";
 
         try {
 
             URL url = new URL(mBaseURL + endpoint);
 
-            executeHTTPRequest(
+            result = executeHTTPRequest(
                     url,
                     HTTP_REQUEST_METHOD_POST,
                     getPostParamsAsString(parameters)
@@ -91,6 +93,7 @@ public class HTTPRequest {
                     "cannot perform post request, url not formatted correctly"
             );
         }
+        return result;
     }
 
     // url endpoint ? params

@@ -27,6 +27,7 @@ import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,34 +52,47 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTextView = (TextView) findViewById(R.id.time_view);
+        mSearchView = (SearchView) findViewById(R.id.searchView2);
 
         mToolbar.setTitle("Test title");
         setSupportActionBar(mToolbar);
 
 
-
-        new AsyncTask<String, Void, String>() {
-
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            protected String doInBackground(String... strings) {
-
-                HTTPRequest request = new HTTPRequest("https://itunes.com/search");
-                Map<String, String> params = new HashMap<>();
-                params.put("term", "beatles");
-                params.put("country", "US");
-                request.post("groups", params);
-                return
+            public boolean onQueryTextSubmit(String s) {
+                return false;
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            public boolean onQueryTextChange(final String s) {
+
+                new AsyncTask<String, Void, String>() {
+
+                    @Override
+                    protected String doInBackground(String... strings) {
+
+                        HTTPRequest request = new HTTPRequest("https://itunes.com/search");
+                        Map<String, String> params = new HashMap<>();
+                        params.put("term", s);
+                        params.put("country", "US");
+                        return request.post("groups", params);
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(String result) {
+                        mTextView.setText("Result: " + result);
+                    }
 
 
+                }.execute();
 
+                return true;
             }
+        });
 
-
-        }.execute();
 
 
 
