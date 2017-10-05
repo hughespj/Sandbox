@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected String doInBackground(String... strings) {
 
-                        HTTPRequest request = new HTTPRequest("https://itunes.com/");
+                        HTTPRequest request = new HTTPRequest("https://itunes.apple.com/");
                         Map<String, String> params = new HashMap<>();
                         params.put("term", s);
                         params.put("country", "US");
