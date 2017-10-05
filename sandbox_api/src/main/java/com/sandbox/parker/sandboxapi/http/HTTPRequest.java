@@ -104,11 +104,13 @@ public class HTTPRequest {
         String paramsString = "";
 
         if (params != null && !params.isEmpty()) {
+            int count = 0;
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                if (params.get(0) != entry.toString()) {
+                paramsString += (entry.getKey() + "=" + entry.getValue());
+                if (count < (params.size() -1)) {
                     paramsString += "&";
                 }
-                paramsString += (entry.getKey() + "=\"" + entry.getValue() + "\"");
+                count++;
             }
         } else {
             Log.e(this.getClass().getSimpleName(), "Parameters provided to POST is empty");
