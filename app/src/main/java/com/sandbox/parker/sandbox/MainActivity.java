@@ -26,9 +26,6 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -69,15 +66,14 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(final String s) {
 
                 new AsyncTask<String, Void, String>() {
-
                     @Override
                     protected String doInBackground(String... strings) {
 
-                        HTTPRequest request = new HTTPRequest("https://itunes.com/search");
+                        HTTPRequest request = new HTTPRequest("https://itunes.com/");
                         Map<String, String> params = new HashMap<>();
                         params.put("term", s);
                         params.put("country", "US");
-                        return request.post("groups", params);
+                        return request.post("search", params);
 
                     }
 
@@ -148,13 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         accountHeader.setActiveProfile(getSavedProfile());
-
-//        for (IProfile profile : profileList) {
-//            if (profile.getName().toString() == navPrefs.getString("name", null)) {
-//                accountHeader.setActiveProfile(profile);
-//            }
-//
-//        }
 
         Drawer drawer = new DrawerBuilder()
                 .withActivity(this)

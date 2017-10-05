@@ -147,6 +147,7 @@ public class HTTPRequest {
             publishProgress(Progress.CONNECT_SUCCESS, 0);
 
             int responseCode = connection.getResponseCode();
+            Log.d(getClass().getSimpleName(), "Response Code: " + responseCode);
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
