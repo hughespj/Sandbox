@@ -50,7 +50,8 @@ public class JSONHelper {
                 song.setTrackCensoredName(jsonSongObj.getString("trackCensoredName"));
                 song.setArtistViewUrl(jsonSongObj.getString("artistViewUrl"));
                 song.setCollectionViewUrl(jsonSongObj.getString("collectionViewUrl"));
-                song.setTrackViewUrl(jsonObject.getString("trackViewUrl"));
+                song.setTrackViewUrl(jsonSongObj.getString("trackViewUrl"));
+
                 song.setPreviewUrl(jsonSongObj.getString("previewUrl"));
 
                 song.setArtworkUrl30(jsonSongObj.getString("artworkUrl30"));
