@@ -23,9 +23,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.sandbox.parker.sandboxapi.dto.Song;
+import com.sandbox.parker.sandboxapi.helper.JSONHelper;
 import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,12 +78,18 @@ public class MainActivity extends AppCompatActivity {
                         Map<String, String> params = new HashMap<>();
                         params.put("term", s);
                         params.put("country", "US");
+                        params.put("media", "music");
+                        params.put("entity", "song");
+                        params.put("attribute", "artistTerm");
                         return request.post("search", params);
 
                     }
 
                     @Override
                     protected void onPostExecute(String result) {
+
+                        List<Song> songs = JSONHelper.readStreamAsJSON(result);
+
                         mTextView.setText("Result: " + result);
                     }
 

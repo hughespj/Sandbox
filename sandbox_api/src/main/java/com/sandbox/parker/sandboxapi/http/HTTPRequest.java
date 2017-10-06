@@ -1,8 +1,16 @@
 package com.sandbox.parker.sandboxapi.http;
 
 
+import android.util.JsonReader;
 import android.util.Log;
 
+import com.sandbox.parker.sandboxapi.dto.Song;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +19,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -157,7 +167,7 @@ public class HTTPRequest {
             stream = connection.getInputStream();
             publishProgress(Progress.GET_INPUT_STREAM_SUCCESS, 0);
             if (stream != null) {
-                result = readStream(stream, 500);
+                result = readStream(stream);
             }
         } catch (IOException e) {
 
@@ -200,21 +210,31 @@ public class HTTPRequest {
         }
     }
 
-    private String readStream(InputStream stream, int maxReadSize)
-            throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] rawBuffer = new char[maxReadSize];
-        int readSize;
-        StringBuffer buffer = new StringBuffer();
-        while (((readSize = reader.read(rawBuffer)) != -1) && maxReadSize > 0) {
-            if (readSize > maxReadSize) {
-                readSize = maxReadSize;
+    private String readStream(InputStream stream) {
+
+        try {
+
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(stream,"utf-8")
+            );
+
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
             }
-            buffer.append(rawBuffer, 0, readSize);
-            maxReadSize -= readSize;
+
+            br.close();
+
+            return sb.toString();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return "";
         }
-        return buffer.toString();
     }
 
     public String getBaseURL() {
