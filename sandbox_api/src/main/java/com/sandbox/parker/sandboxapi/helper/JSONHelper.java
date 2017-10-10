@@ -17,9 +17,9 @@ import java.util.List;
 
 public class JSONHelper {
 
-    public static List<Song> readStreamAsJSON(String jsonData) {
+    public static ArrayList<Song> readStreamAsJSON(String jsonData) {
 
-        List<Song> songs = new ArrayList<>();
+        ArrayList<Song> songs = new ArrayList<>();
 
         try {
 

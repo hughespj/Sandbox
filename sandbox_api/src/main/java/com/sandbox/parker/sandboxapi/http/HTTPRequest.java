@@ -66,12 +66,14 @@ public class HTTPRequest {
 
     }
 
-    public void get(String endpoint) {
+    public String get(String endpoint) {
+
+        String result = "";
 
         try {
 
             URL url = new URL(mBaseURL + endpoint);
-            executeHTTPRequest(url, HTTP_REQUEST_METHOD_GET);
+            result = executeHTTPRequest(url, HTTP_REQUEST_METHOD_GET);
 
         } catch (MalformedURLException e) {
 
@@ -80,6 +82,8 @@ public class HTTPRequest {
                     "cannot perform get request, url not formatted correctly"
             );
         }
+
+        return result;
     }
 
     public String post(String endpoint, Map<String, String> parameters) {
@@ -129,8 +133,9 @@ public class HTTPRequest {
         return paramsString;
     }
 
-    private void executeHTTPRequest(URL url, String HTTPMethod) {
-        executeHTTPRequest(url, HTTPMethod, null);
+    private String executeHTTPRequest(URL url, String HTTPMethod) {
+        String result = executeHTTPRequest(url, HTTPMethod, null);
+        return result;
     }
 
     private String executeHTTPRequest(URL url, String HTTPMethod, String params) {

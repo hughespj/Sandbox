@@ -1,17 +1,29 @@
 package com.sandbox.parker.sandbox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+import android.widget.VideoView;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -23,12 +35,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.sandbox.parker.sandbox.song.SongActivity;
 import com.sandbox.parker.sandboxapi.dto.Song;
 import com.sandbox.parker.sandboxapi.helper.JSONHelper;
 import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private IProfile savedProfile;
     private SearchView mSearchView;
     private TextView mTextView;
+    private ListView mListView;
+    private MediaPlayer mediaPlayer;
 
-
+    private MainActivity mainActivity;
 
 
     @Override
@@ -56,20 +69,18 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTextView = (TextView) findViewById(R.id.time_view);
         mSearchView = (SearchView) findViewById(R.id.searchView2);
+        mListView = (ListView) findViewById(R.id.listView);
 
         mToolbar.setTitle("Test title");
         setSupportActionBar(mToolbar);
 
+        setMainActivity(this);
+
+
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String s) {
-
+            public boolean onQueryTextSubmit(final String s) {
                 new AsyncTask<String, Void, String>() {
                     @Override
                     protected String doInBackground(String... strings) {
@@ -88,20 +99,41 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
-                        List<Song> songs = JSONHelper.readStreamAsJSON(result);
+                        final ArrayList<Song> songs = JSONHelper.readStreamAsJSON(result);
 
-                        mTextView.setText("Result: " + result);
+//                        mTextView.setText("Result: " + result);
+
+                        SongListAdapter adapter = new SongListAdapter(getApplicationContext(), songs);
+                        mListView.setAdapter(adapter);
+
+
+
+
+//                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                            @Override
+//                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                                Intent intent = new Intent(getMainActivity(), SongActivity.class);
+////                                intent.putExtra("song", songs.get(i));
+//                                startActivity(intent);
+//                            }
+//                        });
                     }
 
 
                 }.execute();
 
+
+
                 return true;
             }
+
+            @Override
+            public boolean onQueryTextChange(final String s) {
+                return false;
+
+            }
+
         });
-
-
-
 
 
 
@@ -209,4 +241,121 @@ public class MainActivity extends AppCompatActivity {
     public void setSavedProfile(IProfile savedProfile) {
         this.savedProfile = savedProfile;
     }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public class SongListAdapter extends BaseAdapter {
+
+        private ArrayList<Song> songs;
+        private Context mContext;
+
+        public SongListAdapter (Context context, ArrayList<Song> songList) {
+            mContext = context;
+            songs = songList;
+        }
+
+        @Override
+        public int getCount() {
+            return songs.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return songs.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View listView = getLayoutInflater().inflate(R.layout.list_view_layout, viewGroup, false);
+
+            TextView albumName = (TextView) listView.findViewById(R.id.track_collection_name);
+            TextView trackName = (TextView) listView.findViewById(R.id.track_name);
+            TextView artistName = (TextView) listView.findViewById(R.id.artist_name);
+            ImageView albumCover = (ImageView) listView.findViewById(R.id.track_collection_image);
+            final ToggleButton playButton = (ToggleButton) listView.findViewById(R.id.play_button);
+
+
+            albumName.setText("");
+            trackName.setText("");
+
+            final Song song = (Song) getItem(i);
+
+            albumName.setText(song.getCollectionName());
+            trackName.setText(song.getTrackName());
+            artistName.setText(song.getArtistName());
+
+            Picasso.with(mContext).load(
+                    song.getArtworkUrl60())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(albumCover);
+
+            mediaPlayer = new MediaPlayer();
+
+            try {
+                mediaPlayer.setDataSource(song.getPreviewUrl());
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.prepare();
+
+
+            } catch (IOException e) {
+                Log.e(getClass().getSimpleName(), "IOException occured" + e);
+            }
+
+            playButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.release();
+                        } else if (!mediaPlayer.isPlaying()) {
+                            mediaPlayer.start();
+                        }
+
+
+                }
+            });
+
+            playButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    try {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setDataSource(song.getPreviewUrl());
+                        mediaPlayer.prepareAsync();
+
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                mediaPlayer.start();
+                            }
+                        });
+
+
+                    } catch (IOException e) {
+                        Log.e(getClass().getSimpleName(), "IOException occured" + e);
+                    }
+                }
+            });
+
+
+
+
+            return listView;
+        }
+    }
+
+
+
+
 }
