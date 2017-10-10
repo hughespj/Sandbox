@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView mSearchView;
     private TextView mTextView;
     private ListView mListView;
-    private MediaPlayer mediaPlayer;
 
     private MainActivity mainActivity;
 
@@ -109,14 +108,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                            @Override
-//                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                                Intent intent = new Intent(getMainActivity(), SongActivity.class);
-////                                intent.putExtra("song", songs.get(i));
-//                                startActivity(intent);
-//                            }
-//                        });
+                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Intent intent = new Intent(getMainActivity(), SongActivity.class);
+//
+
+                                startActivity(intent);
+                            }
+                        });
                     }
 
 
@@ -300,12 +300,12 @@ public class MainActivity extends AppCompatActivity {
                     .placeholder(R.mipmap.ic_launcher)
                     .into(albumCover);
 
-            mediaPlayer = new MediaPlayer();
+            final MediaPlayer mediaPlayer = new MediaPlayer();
 
             try {
                 mediaPlayer.setDataSource(song.getPreviewUrl());
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.prepare();
+
 
 
             } catch (IOException e) {
@@ -315,40 +315,21 @@ public class MainActivity extends AppCompatActivity {
             playButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    try {
                         if (mediaPlayer.isPlaying()) {
                             mediaPlayer.release();
+
                         } else if (!mediaPlayer.isPlaying()) {
+                            mediaPlayer.prepare();
                             mediaPlayer.start();
                         }
-
-
-                }
-            });
-
-            playButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    try {
-                        mediaPlayer = new MediaPlayer();
-                        mediaPlayer.setDataSource(song.getPreviewUrl());
-                        mediaPlayer.prepareAsync();
-
-                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                mediaPlayer.start();
-                            }
-                        });
-
-
                     } catch (IOException e) {
                         Log.e(getClass().getSimpleName(), "IOException occured" + e);
                     }
+
+
                 }
             });
-
-
 
 
             return listView;

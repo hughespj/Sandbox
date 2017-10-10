@@ -38,6 +38,8 @@ public class Song {
     private String primaryGenreName;
     private boolean isStreamable;
 
+    private String json;
+
 
     public String getWrapperType() {
         return wrapperType;
@@ -285,5 +287,13 @@ public class Song {
 
     public void setStreamable(boolean streamable) {
         isStreamable = streamable;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 }
