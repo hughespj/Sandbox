@@ -19,21 +19,19 @@ import java.util.Map;
  */
 
 public class SongActivity extends AppCompatActivity {
-    private Song song;
     private ImageView collectionImage;
     private TextView artistName;
     private TextView collectionName;
     private TextView trackName;
     private TextView lyricBody;
 
-    public SongActivity(Song song){
-        this.song = song;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.song_fragment_layout);
+
+        Bundle bundle = getIntent().getExtras();
+        final Song song = (Song) bundle.get("song");
 
         collectionImage = (ImageView) findViewById(R.id.collection_image);
         artistName = (TextView) findViewById(R.id.song_artist);
@@ -71,11 +69,4 @@ public class SongActivity extends AppCompatActivity {
         }.execute();
     }
 
-    public Song getSong() {
-        return song;
-    }
-
-    public void setSong(Song song) {
-        this.song = song;
-    }
 }

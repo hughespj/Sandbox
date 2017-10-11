@@ -17,13 +17,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.VideoView;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -104,19 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
                         SongListAdapter adapter = new SongListAdapter(getApplicationContext(), songs);
                         mListView.setAdapter(adapter);
-
-
-
-
-                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Intent intent = new Intent(getMainActivity(), SongActivity.class);
-//
-
-                                startActivity(intent);
-                            }
-                        });
                     }
 
 
@@ -317,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     try {
                         if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.release();
+                            mediaPlayer.stop();
 
                         } else if (!mediaPlayer.isPlaying()) {
                             mediaPlayer.prepare();
@@ -328,6 +313,16 @@ public class MainActivity extends AppCompatActivity {
                     }
 
 
+                }
+            });
+
+            listView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getMainActivity(), SongActivity.class);
+                    Bundle bundle = new Bundle();
+                    intent.putExtra("song", song);
+                    startActivity(intent);
                 }
             });
 

@@ -1,10 +1,13 @@
 package com.sandbox.parker.sandboxapi.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by parker on 10/5/17.
  */
 
-public class Song {
+public class Song implements Parcelable {
 
     private String wrapperType;
     private String kind;
@@ -296,4 +299,97 @@ public class Song {
     public void setJson(String json) {
         this.json = json;
     }
+
+    public Song() {
+
+    }
+
+    public Song(Parcel in) {
+        wrapperType = in.readString();
+        kind = in.readString();
+        artistId = in.readLong();
+        collectionId = in.readLong();
+        trackId = in.readLong();
+        artistName = in.readString();
+        collectionName = in.readString();
+        trackName = in.readString();
+        collectionCensoredName = in.readString();
+        trackCensoredName = in.readString();
+        artistViewUrl = in.readString();
+        collectionViewUrl = in.readString();
+        trackViewUrl = in.readString();
+        previewUrl = in.readString();
+        artworkUrl30 = in.readString();
+        artworkUrl60 = in.readString();
+        artworkUrl100 = in.readString();
+        collectionPrice = in.readDouble();
+        trackPrice = in.readDouble();
+        releaseDate = in.readString();
+        collectionExplicitness = in.readString();
+        trackExplicitness = in.readString();
+        discCount = in.readInt();
+        discNumber = in.readInt();
+        trackCount = in.readInt();
+        trackNumber = in.readInt();
+        trackTimeMillis = in.readLong();
+        country = in.readString();
+        currency = in.readString();
+        primaryGenreName = in.readString();
+        isStreamable = in.readByte() != 0x00;
+        json = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(wrapperType);
+        dest.writeString(kind);
+        dest.writeLong(artistId);
+        dest.writeLong(collectionId);
+        dest.writeLong(trackId);
+        dest.writeString(artistName);
+        dest.writeString(collectionName);
+        dest.writeString(trackName);
+        dest.writeString(collectionCensoredName);
+        dest.writeString(trackCensoredName);
+        dest.writeString(artistViewUrl);
+        dest.writeString(collectionViewUrl);
+        dest.writeString(trackViewUrl);
+        dest.writeString(previewUrl);
+        dest.writeString(artworkUrl30);
+        dest.writeString(artworkUrl60);
+        dest.writeString(artworkUrl100);
+        dest.writeDouble(collectionPrice);
+        dest.writeDouble(trackPrice);
+        dest.writeString(releaseDate);
+        dest.writeString(collectionExplicitness);
+        dest.writeString(trackExplicitness);
+        dest.writeInt(discCount);
+        dest.writeInt(discNumber);
+        dest.writeInt(trackCount);
+        dest.writeInt(trackNumber);
+        dest.writeLong(trackTimeMillis);
+        dest.writeString(country);
+        dest.writeString(currency);
+        dest.writeString(primaryGenreName);
+        dest.writeByte((byte) (isStreamable ? 0x01 : 0x00));
+        dest.writeString(json);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 }
