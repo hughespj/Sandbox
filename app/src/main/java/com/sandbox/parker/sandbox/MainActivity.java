@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
-                        final ArrayList<Song> songs = JSONHelper.readStreamAsJSON(result);
+                        final ArrayList<Song> songs = JSONHelper.readSongStreamAsJSON(result);
 
 //                        mTextView.setText("Result: " + result);
 
@@ -320,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getMainActivity(), SongActivity.class);
-                    Bundle bundle = new Bundle();
                     intent.putExtra("song", song);
                     startActivity(intent);
                 }

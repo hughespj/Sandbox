@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.sandbox.parker.sandbox.R;
 import com.sandbox.parker.sandboxapi.dto.Song;
+import com.sandbox.parker.sandboxapi.helper.JSONHelper;
 import com.sandbox.parker.sandboxapi.http.HTTPRequest;
 import com.squareup.picasso.Picasso;
 
@@ -56,13 +57,20 @@ public class SongActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("artist", song.getArtistName());
                 params.put("title", song.getTrackName());
-                return request.get(params.get(0) + "/" + params.get(1));
+
+                String artistParam = params.get("artist").replace(" ", "_");
+                String titleParam = params.get("title").replace(" ", "_");
+                String testURL = ("https://api.lyrics.ovh/v1/" + artistParam + "/" + titleParam);
+
+                return request.get(artistParam + "/" + titleParam);
+
 
             }
 
             @Override
             protected void onPostExecute(String result) {
-                lyricBody.setText(result);
+                String formattedResult = JSONHelper.readLyricStreamAsJSON(result);
+                lyricBody.setText(formattedResult);
             }
 
 

@@ -7,6 +7,7 @@ import com.sandbox.parker.sandboxapi.dto.Song;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,7 +20,23 @@ import java.util.List;
 
 public class JSONHelper {
 
-    public static ArrayList<Song> readStreamAsJSON(String jsonData) {
+    public static String readLyricStreamAsJSON(String jsonData) {
+
+
+        String lyrics = "";
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            lyrics = jsonObject.getString("lyrics");
+
+
+        } catch (JSONException e) {
+            lyrics = e.getMessage();
+        }
+        return lyrics;
+
+    }
+
+    public static ArrayList<Song> readSongStreamAsJSON(String jsonData) {
 
         ArrayList<Song> songs = new ArrayList<>();
 
