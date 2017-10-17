@@ -42,6 +42,7 @@ public class Song implements Parcelable {
     private boolean isStreamable;
 
     private String json;
+    private boolean isCurrentlyPlaying;
 
 
     public String getWrapperType() {
@@ -336,7 +337,10 @@ public class Song implements Parcelable {
         currency = in.readString();
         primaryGenreName = in.readString();
         isStreamable = in.readByte() != 0x00;
+        isCurrentlyPlaying = in.readByte() != 0x00;
         json = in.readString();
+
+
     }
 
     @Override
@@ -377,6 +381,7 @@ public class Song implements Parcelable {
         dest.writeString(currency);
         dest.writeString(primaryGenreName);
         dest.writeByte((byte) (isStreamable ? 0x01 : 0x00));
+        dest.writeByte((byte) (isCurrentlyPlaying ? 0x01 : 0x00));
         dest.writeString(json);
     }
 
@@ -392,4 +397,12 @@ public class Song implements Parcelable {
             return new Song[size];
         }
     };
+
+    public boolean isCurrentlyPlaying() {
+        return isCurrentlyPlaying;
+    }
+
+    public void setCurrentlyPlaying(boolean currentlyPlaying) {
+        isCurrentlyPlaying = currentlyPlaying;
+    }
 }

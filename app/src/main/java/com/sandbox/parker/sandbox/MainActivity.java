@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private SearchView mSearchView;
     private TextView mTextView;
     private ListView mListView;
+    private boolean isPlayAlreadyClicked = false;
+
+    private long songPlayingId;
+    private MediaPlayer mediaPlayer;
 
     private MainActivity mainActivity;
 
@@ -61,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        songPlayingId = 0;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTextView = (TextView) findViewById(R.id.time_view);
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                         final ArrayList<Song> songs = JSONHelper.readSongStreamAsJSON(result);
 
-//                        mTextView.setText("Result: " + result);
+                        mTextView.setText("Results: " + songs.size());
 
                         SongListAdapter adapter = new SongListAdapter(getApplicationContext(), songs);
                         mListView.setAdapter(adapter);
@@ -238,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ArrayList<Song> songs;
         private Context mContext;
+        private boolean isPlayingAlready;
 
         public SongListAdapter (Context context, ArrayList<Song> songList) {
             mContext = context;
@@ -284,29 +293,27 @@ public class MainActivity extends AppCompatActivity {
                     .placeholder(R.mipmap.ic_launcher)
                     .into(albumCover);
 
-            final MediaPlayer mediaPlayer = new MediaPlayer();
-
-            try {
-                mediaPlayer.setDataSource(song.getPreviewUrl());
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-
-
-            } catch (IOException e) {
-                Log.e(getClass().getSimpleName(), "IOException occured" + e);
-            }
-
             playButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
                     try {
                         if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.stop();
 
-                        } else if (!mediaPlayer.isPlaying()) {
+                            mediaPlayer.stop();
+                            mediaPlayer.reset();
+
+                        }
+                        if (songPlayingId != song.getTrackId()) {
+                            mediaPlayer.setDataSource(song.getPreviewUrl());
                             mediaPlayer.prepare();
                             mediaPlayer.start();
+                            songPlayingId = song.getTrackId();
+
+                        } else {
+                            playButton.setChecked(false);
                         }
+
                     } catch (IOException e) {
                         Log.e(getClass().getSimpleName(), "IOException occured" + e);
                     }
@@ -314,6 +321,8 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
+
 
             listView.setOnClickListener(new View.OnClickListener() {
                 @Override
